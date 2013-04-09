@@ -1,0 +1,39 @@
+KIWI deployment tools
+======================
+
+Introduction
+------------
+
+container to store ideas, information and tools to deploy
+images. Most popular the 'nodd' tool to deploy a hybrid
+kiwi live iso image to a stick without destroying data
+on the stick
+
+Installation
+------------
+
+no packages available so far
+
+Usage
+-----
+
+```nodd kiwi-image.iso /dev/stick-device
+
+Mailing list
+------------
+
+*  http://groups.google.com/group/kiwi-images
+
+Contributing
+------------
+
+1. Fork it.
+2. Create a branch (`git checkout -b my_kiwi-deployment-tools`)
+3. Commit your changes (`git commit -am "Added Snarkdown"`)
+4. Push to the branch (`git push origin my_kiwi-deployment-tools`)
+5. Create an [Issue][1] with a link to your branch
+6. Enjoy a refreshing Diet Coke and wait
+
+also see the git-review gem
+
+Remember to have fun :)
