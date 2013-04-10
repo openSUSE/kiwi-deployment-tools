@@ -190,14 +190,8 @@ biosmod="$biosmod normal linux echo vga vbe png"
 biosmod="$biosmod video_bochs video_cirrus gzio"
 biosmod="$biosmod multiboot search configfile fat"
 core=$tmpdir/boot/grub2/$format/core.img
-cdimg=$tmpdir/boot/grub2/$format/eltorito.img
-cdcore=$tmpdir/boot/grub2/$format/cdboot.img
 bootconf=$tmpdir/boot/grub2/bootpart.cfg
 if ! grub2-mkimage -O $format -o $core -c $bootconf $biosmod &>/dev/null;then
-	echo "Can't create core boot image"
-	clean
-fi
-if ! cat $cdcore $core > $cdimg;then
 	echo "Can't create core boot image"
 	clean
 fi
@@ -222,27 +216,11 @@ fi
 #==========================================
 # sync tmpdir to / on the stick
 #------------------------------------------
-stats=/tmp/progress
-lines=$(rsync -rltvh --modify-window=1 --delete --dry-run $tmpdir/* /mnt|wc -l)
-factor=$((100 / lines))
-test -p $stats && mkfifo $stats
-cat < /dev/null > /tmp/progress
-(
-if ! rsync -rltvh --modify-window=1 --delete $tmpdir/* /mnt &>$stats;then
+if ! rsync -rltvh --progress --modify-window=1 --delete $tmpdir/* /mnt;then
 	echo "Can't rsync data to target"
 	umount /mnt
 	clean
 fi
-)&
-syncpid=$!
-while kill -0 $syncpid &>/dev/null;do
-	fdone=$(test -e $stats && cat $stats | wc -l)
-	fdone=$((factor * fdone))
-	echo -ne "==> sending incremental file list $fdone% done\r"
-	sleep 1
-done
-echo -ne "==> sending incremental file list 100% done\r"
-echo
 
 #==========================================
 # install grub2 on stick
