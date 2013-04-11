@@ -89,8 +89,10 @@ touch $tmpdir/boot/$id
 #==========================================
 # create grub2 prefix boot file
 #------------------------------------------
-echo "search -f /boot/$id --set" > $tmpdir/boot/grub2/bootpart.cfg
-echo 'set prefix=($root)/boot/grub2'   >> $tmpdir/boot/grub2/bootpart.cfg
+uuid=$(blkid -o value -s UUID $device_part)
+conf=$tmpdir/boot/grub2/bootpart.cfg
+echo "search --no-floppy --fs-uuid --set=root $uuid" > $conf
+echo 'set prefix=($root)/boot/grub2'   >> $conf
 
 #==========================================
 # create grub configuration
@@ -227,6 +229,11 @@ fi
 #------------------------------------------
 stages=/mnt/boot/grub2/$format
 devmap=/mnt/boot/grub2/device.map
+if ! sfdisk $device_disk --force -A 1;then
+	echo "Can't set first partition active"
+	umount /mnt
+	clean
+fi
 if ! grub2-bios-setup -f -d $stages -m $devmap $device_disk &>/dev/null;then
 	echo "Can't install grub2 into MBR"
 	umount /mnt
