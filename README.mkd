@@ -9,6 +9,9 @@ images. Most popular the 'nodd' tool to deploy a hybrid
 kiwi live iso image to a stick without destroying data
 on the stick
 
+Find presentation slides here:
+https://github.com/openSUSE/kiwi-deployment-tools/blob/master/doc/nodd.pdf
+
 Installation
 ------------
 
